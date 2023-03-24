@@ -21,19 +21,25 @@ const useFetch = (endpoint, query) => {
 
   const fetchData = async () => {
     setIsLoading(true);
-
     try {
       const response = await axios.request(options);
-
+  
       setData(response.data.data);
       setIsLoading(false);
     } catch (error) {
-      setError(error);
-      console.log(error)
+      if (error.response && error.response.status === 429) {
+        console.log("Too many requests. Retrying in 5 seconds...");
+        setTimeout(() => {
+          fetchData();
+        }, 2000);
+      } else {
+        setError(error);
+      }
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchData();
