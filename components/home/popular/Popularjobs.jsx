@@ -19,6 +19,7 @@ const Popularjobs = () => {
     query: "React developer",
     num_pages: "1",
   });
+  console.log(data)
 
   const [selectedJob, setSelectedJob] = useState();
 
