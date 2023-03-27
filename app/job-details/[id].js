@@ -6,7 +6,7 @@ import { Company, JobAbout, JobFooter, JobTabs, ScreenHeaderBtn, Specifics } fro
 import { COLORS, SIZES, icons } from "../../constants"
 import useFetch from "../../hook/useFetch"
 
-const tabs = ["About", "Qualifications", "Responsibilites"];
+const tabs = ["About", "Qualifications", "Responsibilities"];
 
 const JobDetails = () => {
 
@@ -20,7 +20,11 @@ const JobDetails = () => {
     const [refreshing, setRefreshing] = useState(false)
     const [activeTab, setActiveTab] = useState(tabs[0])
 
-    const onRefresh = () => {}
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        refetch()
+        setRefreshing(false)
+    },[])
 
     const displayTabContent = () => {
         switch (activeTab) {
@@ -33,7 +37,11 @@ const JobDetails = () => {
                 return <JobAbout 
                             info={data[0].job_description ?? ["N/A"] }
                         />
-            case "Responsibilites":
+            case "Responsibilities":
+                return <Specifics 
+                title="Responsibilities"
+                points={data[0].job_highlights?.Responsibilities ?? ["N/A"]}
+            />
             default:
                 break;
         }
@@ -98,6 +106,7 @@ const JobDetails = () => {
             )}
 
         </ScrollView>
+        <JobFooter url={data[0]?.job_google_link ?? "https://careers.google.com/jobs/results"} />
     </>
 
     </SafeAreaView>
